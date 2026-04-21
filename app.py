@@ -31,21 +31,17 @@ st.write("Predict your academic pressure based on your lifestyle habits")
 if trained_model is None:
     st.stop()
 
-# ---------------- INPUTS (must match EXACT column order from model.py) ----------------
-# Order: age, gender, sleep_hours, screen_time_hours, stress_level, study_hours, physical_activity, caffeine_intake
-
+# ---------------- INPUTS ----------------
 age = st.slider("Age", 18, 35, 22)
 
 gender = st.selectbox("Gender", ["Male", "Female", "Other"])
-gender_map = {"male": 0, "female": 1, "other": 2}
-gender_encoded = gender_map[gender.lower()]
+gender_encoded = {"male": 0, "female": 1, "other": 2}[gender.lower()]
 
 sleep = st.slider("Sleep Hours", 0, 12, 7)
 screen = st.slider("Screen Time (hours)", 0, 12, 5)
 
 stress = st.selectbox("Stress Level", ["Low", "Medium", "High"])
-stress_map = {"low": 1, "medium": 2, "high": 3}
-stress_encoded = stress_map[stress.lower()]
+stress_encoded = {"low": 1, "medium": 2, "high": 3}[stress.lower()]
 
 study = st.slider("Study Hours", 0, 12, 4)
 
@@ -56,19 +52,18 @@ caffeine = st.slider("Caffeine Intake (cups)", 0, 5, 1)
 
 # ---------------- PREDICTION ----------------
 if st.button("Predict Academic Pressure"):
-    # EXACT same order as training columns (after dropping student_id, before academic_pressure)
     input_data = np.array([[age, gender_encoded, sleep, screen, stress_encoded, study, activity_encoded, caffeine]])
 
-    prediction = trained_model.predict(input_data)[0]
+    prediction = int(trained_model.predict(input_data)[0])
 
     pressure_label = {1: "Low 🟢", 2: "Medium 🟡", 3: "High 🔴"}
-    label = pressure_label.get(round(prediction), f"Score: {round(prediction, 2)}")
+    label = pressure_label.get(prediction, "Unknown")
 
     st.success(f"Predicted Academic Pressure: {label}")
 
-    if prediction >= 2.5:
+    if prediction == 3:
         st.write("⚠️ High pressure detected. Improve sleep and reduce screen time.")
-    elif prediction >= 1.5:
+    elif prediction == 2:
         st.write("⚖️ Moderate pressure. Stay consistent with your habits.")
     else:
         st.write("✅ Low pressure. Great lifestyle balance!")
