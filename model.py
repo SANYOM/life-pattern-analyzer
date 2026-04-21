@@ -4,18 +4,16 @@ import joblib
 
 df = pd.read_csv("dataset.csv")
 
-# Clean column names
+# Clean columns
 df.columns = df.columns.str.strip().str.lower().str.replace(" ", "_")
 
-print("Columns:", df.columns)
+print(df.columns)
 
-# Adjust these if needed
-X = df[["sleep_hours", "study_hours", "screen_time", "stress_level"]]
-y = df["productivity_score"]
+# Adjust these after checking print
+X = df.iloc[:, :-1]   # all columns except last
+y = df.iloc[:, -1]    # last column as target
 
 model = LinearRegression()
 model.fit(X, y)
 
 joblib.dump(model, "model.pkl")
-
-print("Model saved!")
