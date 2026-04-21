@@ -5,7 +5,18 @@ import joblib
 import matplotlib.pyplot as plt
 
 # Load model
-model = joblib.load("model.pkl")
+import os
+import joblib
+
+def load_model():
+    if os.path.exists("model.pkl"):
+        return joblib.load("model.pkl")
+    else:
+        import subprocess
+        subprocess.run(["python", "model.py"])
+        return joblib.load("model.pkl")
+
+model = load_model()
 
 st.set_page_config(page_title="Life Pattern Analyzer", layout="centered")
 
