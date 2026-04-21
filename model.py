@@ -4,16 +4,34 @@ import joblib
 
 df = pd.read_csv("dataset.csv")
 
-# Clean columns
+# Clean column names
 df.columns = df.columns.str.strip().str.lower().str.replace(" ", "_")
 
-print(df.columns)
+# 🔥 Convert categorical values to numbers
+mapping = {
+    "low": 1,
+    "medium": 2,
+    "high": 3
+}
 
-# Adjust these after checking print
-X = df.iloc[:, :-1]   # all columns except last
-y = df.iloc[:, -1]    # last column as target
+for col in df.columns:
+    df[col] = df[col].replace(mapping)
+
+# Convert everything to numeric (important)
+df = df.apply(pd.to_numeric, errors='coerce')
+
+# Drop rows with missing values
+df = df.dropna()
+
+print("Cleaned Data:\n", df.head())
+
+# Use generic approach
+X = df.iloc[:, :-1]
+y = df.iloc[:, -1]
 
 model = LinearRegression()
 model.fit(X, y)
 
 joblib.dump(model, "model.pkl")
+
+print("Model trained successfully!")
