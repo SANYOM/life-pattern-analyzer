@@ -1,3 +1,8 @@
+import os
+import streamlit as st
+
+st.write("Files:", os.listdir())
+
 import streamlit as st
 import pandas as pd
 import numpy as np
@@ -7,14 +12,25 @@ import matplotlib.pyplot as plt
 # Load model
 import os
 import joblib
+import streamlit as st
 
 def load_model():
     if os.path.exists("model.pkl"):
         return joblib.load("model.pkl")
     else:
-        import subprocess
-        subprocess.run(["python", "model.py"])
-        return joblib.load("model.pkl")
+        st.write("Model not found. Training now...")
+
+        try:
+            import model  # runs model.py
+        except Exception as e:
+            st.error(f"Model training failed: {e}")
+            return None
+
+        if os.path.exists("model.pkl"):
+            return joblib.load("model.pkl")
+        else:
+            st.error("model.pkl was not created!")
+            return None
 
 model = load_model()
 
