@@ -59,7 +59,7 @@ if st.button("Predict"):
     # Shape must match training: 8 features (age, sleep, screen, stress, study, activity, caffeine, academic_pressure)
     # academic_pressure is the TARGET (last col) — so we only pass the first 8 columns
     input_data = np.array([[age, sleep, screen, stress_encoded, study, activity_encoded, caffeine]])
-
+    
     prediction = trained_model.predict(input_data)[0]
     predicted_pressure = round(prediction, 2)
 
