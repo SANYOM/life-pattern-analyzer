@@ -174,12 +174,14 @@ def predict_all(mdls, inputs):
 TRANSPARENT = "rgba(0,0,0,0)"
 
 def _base_layout(**kwargs):
-    return dict(
+    # Set the defaults first
+    base = dict(
         paper_bgcolor=TRANSPARENT, plot_bgcolor=TRANSPARENT,
-        font=dict(color="white"), margin=dict(l=20, r=20, t=30, b=20),
-        **kwargs
+        font=dict(color="white"), margin=dict(l=20, r=20, t=30, b=20)
     )
-
+    # Update with any incoming kwargs (this safely overwrites 'margin' if provided)
+    base.update(kwargs)
+    return base
 def gauge_chart(value, title, low_good=True):
     """Gauge where low_good=True means low value is safe (e.g. burnout)."""
     if low_good:
